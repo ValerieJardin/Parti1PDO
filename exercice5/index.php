@@ -1,0 +1,47 @@
+<?php
+/** Code pour se connecter au vhost puis à la base de données souhaitée : * */
+try {
+    /** Déclaraton de la variable dde connection * */
+    $bdd = new PDO('mysql:host=localhost;dbname=colyseum;charset=utf8', 'root', 'amstcvj60');
+    /** Dans le cas où la connection ne peut se faire, déclaration de la variable message d'exception * */
+} catch (Exception $e) {
+    /** Dans le cas où la connection ne peut se faire, déclaration de la variable message d'erreur * */
+    $msg = 'Erreur PDO dans ' . $e->getFile() . ' ligne ' . $e->getLine() . ' : ' . $e->getMessage();
+    /** Sécurisation du code en demandant l'arrêt de la recherche de connection après avoir récupéré 
+      le dossier, la ligne et le message d'erreur. * */
+    die($msg);
+}
+?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Exercice 5 de la partie 1 en PDO</title>
+        <meta charset="utf-8"/>
+        <meta lastName="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <link href="../style.css" rel="stylesheet" lastName="text/css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <?php include '../index.php'; ?>
+        </header>
+        <p class="order">Consigne de l'exercice 5 de la partie 1 sur PDO : Afficher uniquement le nom et le prénom de tous les clients dont le nom commence par la lettre "M".Trier les noms par ordre alphabétique.</p>
+        <p class="title">Voici la liste des spectacles :</p>
+        <?php
+        /** Déclaration de la variable effectuant la requète de sélection de la table spectacles = clients + 
+         * affichage de ceux que les clients (WHERE) dont le nom commence par un M (like)  + 
+         * afficher dans l'ordre alphabétique des noms +
+         * fetchAll qui charge en mémoire toutes les données sous forme de tableau. * */
+        $clients = $bdd->query('SELECT `clients`.`lastName`, `clients`.`firstName` FROM `clients` WHERE `lastName` LIKE \'m%\' ORDER BY `clients`.`lastName`')->fetchAll();
+        /** Affichage de la table clients dont le nom comme,ce par un M  * */
+        foreach ($clients as $client) {
+            ?>
+            <p class="list">Nom : <?= $client['lastName'] ?><br/>Prénom : <?= $client['firstName'] ?></p>
+                <?php
+            }
+            ?>
+    </body>
+</html>
